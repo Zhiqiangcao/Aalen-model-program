@@ -36,6 +36,7 @@ tst=u/sqrt(diag(v));tst
 
 
 This result is identical to Aalne(1989)' paper, and estimated cumulative regression functions are shown for the covariates "sex", "condition","T-stage" and "N-stage" in following figures
+![Alt text](C:/Users/czq/Desktop/Rplot1.jpeg "Optional title")
 
 
 
