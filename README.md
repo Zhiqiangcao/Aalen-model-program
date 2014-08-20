@@ -20,8 +20,10 @@ concern treatment of carcinoma of the oropharynx. Survival time from diagnosis i
 values.
 
 
-‘’tdata=pharynx[-c(136,159),]  #去掉两个异常值
+tdata=pharynx[-c(136,159),]  #去掉两个异常值
+
 p=7
+
 jg=aalen(tdata,p,2) 
 
 u=jg[[3]][2:(p+1)]  
@@ -31,7 +33,7 @@ v=jg[[4]][2:(p+1),2:(p+1)]
 tst=u/sqrt(diag(v));tst  
 
 [1] -1.6247545  0.9289796 -1.4147887  0.2861529  4.1429450  2.5158461  1.9815236
-‘’
+
 
 This result is identical to Aalne(1989)' paper, and estimated cumulative regression functions are shown for the covariates "sex", "condition","T-stage" and "N-stage" in following figures
 
