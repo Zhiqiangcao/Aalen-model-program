@@ -1,0 +1,42 @@
+aalen=function(tdata,p,w){
+  ##tdata is a dataframe, p is the the dimensions of covariates,
+  ##w is a weight indicator chooseing 3 types, that's 0,1,others, 
+  ##if w is setted 0, there will be no weight, 1 is the number at risk, others is aalen's suggestion
+  n=length(tdata$time)  #样本容量
+  A=unique(tdata$time*tdata$status);A=sort(A); #event time,从小到大排列
+  m=length(A);
+  b=matrix(0,m,p+1)   #m行p+1列矩阵,储存估计hazard function
+  vb=matrix(0,m,p+1)   #estimate the variance of hazard function
+  v=matrix(0,p+1,p+1)  #estimate the variance for the test
+  flag=0;  #某行跳出下面的循环指示
+  for(i in 2:m){
+    t=A[i]
+    y=1*(tdata$time>=t)   #if the ith subject is at risk at time t is 1,otherwise 0
+    y1=sum(tdata$time>=t)  #number at risk
+    z=y*tdata[,3:(p+2)]    #取数据的协变量，因为第1列为时间，第二列为status
+    x=as.matrix(cbind(y,z))
+    I=1*(tdata$time==t)  #ith element equal to 1 if subject i dies at t
+    ID=diag(I)           #o otherwise
+    if(det(t(x)%*%x)<=1e-6) {
+      flag=i
+      break   #遇到奇异矩阵跳出来,记录计算到第i行为奇异阵
+    }
+    s=solve(t(x)%*%x)
+    if(w==0) W=diag(1,p+1,p+1)   #不赋权重
+    else if(w==1) W=diag(y1,p+1,p+1) #权重是number at risk
+    else W=solve(diag(diag(s)))  #aalen suggested
+    s1=W%*%s%*%t(x)   
+    b[i,]=b[i-1,]+s1%*%I   #cumulative regression function b(t)
+    s2=s1%*%ID%*%t(s1)     #variance-covariance matrix of b(t)
+    v=v+s2                 #为后面构造模型的卡方检验作准备
+    vb[i,]=vb[i-1,]+diag(s2)  #variance matrix of b(t)
+  }
+  lp=b-1.96*sqrt(vb)  #下侧置信区间
+  up=b+1.96*sqrt(vb)  #上侧置信区间
+  b1=cbind(A,b)       #time and cumulative regression function
+  v1=cbind(A,sqrt(vb))  #time and variance of b(t)
+  if(flag==0) k=m else k=flag-1    
+  u=b[k,]   #某行产生奇异跳出来的值, 因为后面的行 
+  jg=list(b1,v1,u,v,lp,up)
+  return(jg)
+}
