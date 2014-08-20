@@ -19,25 +19,13 @@ Pharynx data comes from a clinical trial carried out by the Radiation Therapy On
 concern treatment of carcinoma of the oropharynx. Survival time from diagnosis is given in days and some of the patients are censored. Data are given for 195 patients, two of whom are not included in the analysis due to missing
 values.
 
-'''{r}
+
 tdata=pharynx[-c(136,159),]  #去掉两个异常值
-tdata=data.frame(
-  time=data$TIME+runif(193,0,1),  #增加0,1之间的数解决ties的问题
-  status=data$STATUS,
-  z1=data$SEX,
-  z2=data$TX,
-  z3=data$GRADE,
-  z4=data$AGE,
-  z5=data$COND,
-  z6=data$T_STAGE,
-  z7=data$N_STAGE
-  )
 p=7
-jg=aalen(tdata,p,2)
-u=jg[[3]][2:(p+1)]
-v=jg[[4]][2:(p+1),2:(p+1)]
-tst=u/sqrt(diag(v));tst  
-'''{}
+jg=aalen(tdata,p,2)  \\
+u=jg[[3]][2:(p+1)]  \\
+v=jg[[4]][2:(p+1),2:(p+1)] \\
+tst=u/sqrt(diag(v));tst  \\
 [1] -1.6247545  0.9289796 -1.4147887  0.2861529  4.1429450  2.5158461  1.9815236
 
 
