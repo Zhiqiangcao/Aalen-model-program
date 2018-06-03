@@ -20,7 +20,7 @@ concern treatment of carcinoma of the oropharynx. Survival time from diagnosis i
 values.
 
 
-tdata=pharynx[-c(136,159),]  #去掉两个异常值
+tdata=pharynx[-c(136,159),]  #delete two outliers
 
 p=7
 
